@@ -1,9 +1,11 @@
 STARTUP SECTION OFFSET $FF80
 START:
     CLC
+
+;Clear all RAM pages except ZP
     LDY #$0
     STZ $00
-    LDA #$01
+    LDA #1
     STA $01
 ZLOOP:
     LDA #$0
@@ -15,26 +17,20 @@ ZLOOP:
     CMP #$20
     BNE ZLOOP
 
+;Clear ZP
+    LDA #0
     LDY #$0
 ZLOOP2:
     STA $00, y
     INY
     BNE ZLOOP2
 
+;Init Hardware Stack
     LDX #$FF
     TXS
 
-    LDA #$18
-    STA $37
-    LDA #$00
-    STA $36
-
-    LDA #$18
-    STA $35
-    LDA #$00
-    STA $34
-
-    LDA #$18
+;Top of stack at $1000 for now
+    LDA #$10
     STA $33
     LDA #$00
     STA $32
