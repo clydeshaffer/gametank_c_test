@@ -18,9 +18,9 @@
 	****************************************************************
 
 MCH_STACK	EQU	$FF 
-C_STACK		EQU	$7EFF
+C_STACK		EQU	$1EFF
 
-STARTUP	SECTION	OFFSET $7F00
+STARTUP	SECTION	OFFSET $FF00
 
 	xref  _BEG_DATA
 	xref  _END_DATA
@@ -168,6 +168,9 @@ IRQ:
 	pla
 	rti
 
+NMI:
+    RTI
+
 	****************************************************************
 	*                                                              *
 	*   This section defines the interrupt and reset vectors.      *
@@ -178,7 +181,7 @@ IRQ:
 
 VECTORS	SECTION OFFSET $FFFA
 
-V_NMI	dw	0
+V_NMI	dw	NMI
 V_RESET	dw	START
 V_IRQ	dw	IRQ
 
