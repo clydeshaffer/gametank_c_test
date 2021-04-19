@@ -1,0 +1,7 @@
+*.TMP
+*.obj
+*.map
+*.gtr
+*.dis65
+*.bin
+WDCDB.INI
