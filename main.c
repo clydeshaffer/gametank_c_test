@@ -18,6 +18,8 @@
 #define START 6
 #define COLOR 7
 
+char frameflag = 0;
+
 void draw_ball(int x, int y, int col) {
     vram[VX] = x;
     vram[VY] = y;
@@ -67,10 +69,15 @@ void main() {
         } else if(row == 100) {
             dy = -1;
         }
-        asm wai;
+        frameflag = 1;
+        while(frameflag) {} 
     }
 }
 
 void IRQHandler() {
 
+}
+
+void NMIHandler() {
+    frameflag = 0;
 }

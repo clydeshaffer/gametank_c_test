@@ -168,8 +168,41 @@ IRQ:
 	pla
 	rti
 
-NMI:
-    RTI
+    xdef	NMI
+	xref	_NMIHandler
+NMI:	
+	pha		; save hardware registers
+	phx
+	phy
+	ldx	#19
+1?:
+	lda	R0,X
+	pha
+	dex
+	bpl	1?
+	ldx	#8
+2?:
+	lda	VAL-1,X
+	pha
+	dex
+	bne	2?
+	jsr	_NMIHandler
+	ldx	#-8
+3?:
+	pla
+	sta	VAL+8,X
+	inx
+	bne	3?
+	ldx	#-20
+4?:
+	pla
+	sta	R0+20,X
+	inx
+	bne	4?
+	ply
+	plx
+	pla
+	rti
 
 	****************************************************************
 	*                                                              *
