@@ -18,43 +18,59 @@
 #define START 6
 #define COLOR 7
 
-int col = 0, row = 0, dx, dy;
+void draw_ball(int x, int y, int col) {
+    vram[VX] = x;
+    vram[VY] = y;
+    vram[GX] = 128;
+    vram[GY] = 0;
+    vram[WIDTH] = 8;
+    vram[HEIGHT] = 8;
+    vram[COLOR] = col;
+    vram[START] = 1;
+    asm wai;
+    return;
+}
 
 void main() {
-    *dma_flags = DMA_NMI | DMA_CPU_TO_VRAM | DMA_IRQ;
+    char col = 0, row = 0, color = 0;
+    int dx = 1, dy = 1;
+    *dma_flags = DMA_NMI | DMA_IRQ;
     for(row = 0; row < 128; row++) {
         for(col = 0; col < 128; col++) {
             vram[(row << 7) | col] = col^row;
         }
     }
-    *dma_flags = DMA_NMI | DMA_ENABLE | DMA_IRQ;
-    dx = 1;
-    dy = 1;
+    *dma_flags = DMA_NMI | DMA_ENABLE | DMA_IRQ | DMA_TRANS;
     row = 10;
-    col = 10;
+    col = 20;
     while(1) {
-        vram[VX] = col;
-        vram[VY] = row;
-        vram[GX] = 128;
+        vram[VX] = 0;
+        vram[VY] = 0;
+        vram[GX] = 0;
         vram[GY] = 0;
-        vram[WIDTH] = 8;
-        vram[HEIGHT] = 8;
-        vram[COLOR] = row^col;
+        vram[WIDTH] = 127;
+        vram[HEIGHT] = 110;
         vram[START] = 1;
         asm wai;
+
+        draw_ball(col, row, color++);
+
         col += dx;
         row += dy;
-        if(col == 0) {
+        if(col == 1) {
             dx = 1;
-        } else if(col == 100) {
+        } else if(col == 119) {
             dx = -1;
         }
-        if(row == 0) {
+        if(row == 1) {
             dy = 1;
-        } else if(row == 90) {
+        } else if(row == 100) {
             dy = -1;
         }
         asm wai;
-        asm wai;
     }
+}
+
+void IRQHandler() {
+
 }
