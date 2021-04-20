@@ -1,31 +1,4 @@
-#define dma_flags ((volatile char *) 0x2007)
-#define vram ((volatile char *) 0x4000)
-#define vram_VX ((volatile char *) 0x4000)
-#define vram_VY ((volatile char *) 0x4001)
-#define vram_GX ((volatile char *) 0x4002)
-#define vram_GY ((volatile char *) 0x4003)
-#define vram_WIDTH ((volatile char *) 0x4004)
-#define vram_HEIGHT ((volatile char *) 0x4005)
-#define vram_COLOR ((volatile char *) 0x4007)
-#define vram_START ((volatile char *) 0x4006)
-
-#define DMA_ENABLE 1
-#define DMA_PAGE_OUT 2
-#define DMA_NMI 4
-#define DMA_GRAM_PAGE 8
-#define DMA_VRAM_PAGE 16
-#define DMA_CPU_TO_VRAM 32
-#define DMA_IRQ 64
-#define DMA_TRANS 128
-
-#define VX 0
-#define VY 1
-#define GX 2
-#define GY 3
-#define WIDTH 4
-#define HEIGHT 5
-#define START 6
-#define COLOR 7
+#include "gametank.h"
 
 char frameflag = 0;
 char frameflip = DMA_PAGE_OUT;
@@ -92,11 +65,6 @@ void main() {
     int dx = 1, dy = 1;
     asm sei;
     *dma_flags = DMA_NMI | DMA_IRQ;
-    /*for(row = 0; row < 128; row++) {
-        for(col = 0; col < 128; col++) {
-            vram[(row << 7) | col] = col^row;
-        }
-    }*/
     asm {
         xref GameSprites
         xref InflateParams
